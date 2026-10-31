@@ -10592,10 +10592,28 @@ local glow=ak("ImageLabel",{
     Size=UDim2.new(1,60,1,60),
     Position=UDim2.new(0,-30,0,-30),
     ZIndex=0,
-    ThemeTag={
-        ImageColor3="Primary",
-    },
 })
+
+-- 彩虹渐变（首尾同色 FF0000，循环无缝）
+local glowGradient=ak("UIGradient",{
+    Color=ColorSequence.new({
+        ColorSequenceKeypoint.new(0.000,Color3.fromHex("FF0000")),
+        ColorSequenceKeypoint.new(0.166,Color3.fromHex("FF7F00")),
+        ColorSequenceKeypoint.new(0.333,Color3.fromHex("FFFF00")),
+        ColorSequenceKeypoint.new(0.500,Color3.fromHex("00FF00")),
+        ColorSequenceKeypoint.new(0.666,Color3.fromHex("00FFFF")),
+        ColorSequenceKeypoint.new(0.833,Color3.fromHex("0000FF")),
+        ColorSequenceKeypoint.new(0.950,Color3.fromHex("8B00FF")),
+        ColorSequenceKeypoint.new(1.000,Color3.fromHex("FF0000")),
+    }),
+    Rotation=45,
+    Offset=Vector2.new(-1,0),
+    Parent=glow,
+})
+
+local glowTween=aj.Tween(glowGradient,3,{
+    Offset=Vector2.new(1,0)
+},Enum.EasingStyle.Linear,Enum.EasingDirection.Out,-1,false,0)
 
 
 
@@ -11342,10 +11360,18 @@ ar.WindUI.TransparencyValue=p
 as:ToggleTransparency(p>0)
 end
 
-function as.SetGlow(p,r,c,t)
+function as.SetGlow(p,r,t,animate,speed,rotation)
     glow.Visible=r~=false
-    if c then glow.ImageColor3=c end
     if t then glow.ImageTransparency=t end
+    if rotation then glowGradient.Rotation=rotation end
+
+    if animate~=nil then
+        glowTween:Cancel()
+        glowTween=aj.Tween(glowGradient,speed or 3,{
+            Offset=Vector2.new(1,0)
+        },Enum.EasingStyle.Linear,Enum.EasingDirection.Out,animate and -1 or 0,false,0)
+        glowTween:Play()
+    end
 end
 
 local l
