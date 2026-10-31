@@ -10616,7 +10616,7 @@ local borderStroke=ak("UIStroke",{
     Transparency=1 
 })
 local borderGradient=ak("UIGradient",{ Color=rainbowSeq, Rotation=45, Parent=borderStroke })
-
+local glowRotateSpeed = 5 -- 👈 把全局转速变量定义在这里
 
 
 
@@ -11369,7 +11369,6 @@ end
 as.BackgroundImageTransparency=math.floor(m*10+0.5)/10
 end
 
-local glowRotateSpeed = 5 -- 默认转速，你可以全局修改这个值
 
 function as.SetGlow(p, r, t, speed, rotation)
     glow.Visible = r ~= false
