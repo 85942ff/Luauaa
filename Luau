@@ -10584,6 +10584,19 @@ ZIndex=-999999999999999,
 Name="Blur",
 })
 
+local glow=ak("ImageLabel",{
+    Name="WindowGlow",
+    BackgroundTransparency=1,
+    Image="rbxassetid://88645182616510",
+    ImageTransparency=1,
+    Size=UDim2.new(1,60,1,60),
+    Position=UDim2.new(0,-30,0,-30),
+    ZIndex=0,
+    ThemeTag={
+        ImageColor3="Primary",
+    },
+})
+
 
 
 if ae.TouchEnabled and not ae.KeyboardEnabled then
@@ -10936,6 +10949,7 @@ Active=true,
 ar.WindUI.UIScaleObj,
 as.AcrylicPaint and as.AcrylicPaint.Frame or nil,
 az,
+glow,
 aj.NewRoundFrame(as.UICorner,"Squircle",{
 ImageTransparency=1,
 Size=UDim2.new(1,0,1,-240),
@@ -11328,6 +11342,12 @@ ar.WindUI.TransparencyValue=p
 as:ToggleTransparency(p>0)
 end
 
+function as.SetGlow(p,r,c,t)
+    glow.Visible=r~=false
+    if c then glow.ImageColor3=c end
+    if t then glow.ImageTransparency=t end
+end
+
 local l
 local m
 aj.Icon"minimize"
@@ -11459,7 +11479,7 @@ as.OpenButtonMain:Visible(false)
 end
 
 
-al(az,0.25,{ImageTransparency=as.ShadowTransparency},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+al(az,0.25,{ImageTransparency=as.ShadowTransparency},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()al(glow,0.4,{ImageTransparency=0.45},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 if UIStroke then
 al(UIStroke,0.25,{Transparency=.8},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
@@ -11526,7 +11546,7 @@ ImageTransparency=1,
 },Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 end
-al(az,0.25,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+al(az,0.25,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()al(glow,0.3,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.InOut):Play()
 if UIStroke then
 al(UIStroke,0.25,{Transparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
