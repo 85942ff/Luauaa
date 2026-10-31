@@ -4186,7 +4186,7 @@ ZIndex=99,
 BackgroundColor3=Color3.new(0,0,0),
 },{
 ac("UIScale",{
-Scale=1,
+Scale=0.8,
 }),
 ac("UICorner",{
 CornerRadius=UDim.new(1,0)
