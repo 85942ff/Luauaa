@@ -4186,7 +4186,7 @@ ZIndex=99,
 BackgroundColor3=Color3.new(0,0,0),
 },{
 ac("UIScale",{
-Scale=0.95,
+Scale=1,
 }),
 ac("UICorner",{
 CornerRadius=UDim.new(1,0)
@@ -10584,19 +10584,6 @@ ZIndex=-999999999999999,
 Name="Blur",
 })
 
--- ================= 定义彩虹颜色 =================
-local rainbowSeq = ColorSequence.new({
-    ColorSequenceKeypoint.new(0.000, Color3.fromHex("FF0000")),
-    ColorSequenceKeypoint.new(0.166, Color3.fromHex("FF7F00")),
-    ColorSequenceKeypoint.new(0.333, Color3.fromHex("FFFF00")),
-    ColorSequenceKeypoint.new(0.500, Color3.fromHex("00FF00")),
-    ColorSequenceKeypoint.new(0.666, Color3.fromHex("00FFFF")),
-    ColorSequenceKeypoint.new(0.833, Color3.fromHex("0000FF")),
-    ColorSequenceKeypoint.new(0.950, Color3.fromHex("8B00FF")),
-    ColorSequenceKeypoint.new(1.000, Color3.fromHex("FF0000"))
-})
-
--- 1. 创建发光
 local glow=ak("ImageLabel",{
     Name="WindowGlow",
     BackgroundTransparency=1,
@@ -10605,18 +10592,10 @@ local glow=ak("ImageLabel",{
     Size=UDim2.new(1,60,1,60),
     Position=UDim2.new(0,-30,0,-30),
     ZIndex=0,
+    ThemeTag={
+        ImageColor3="Primary",
+    },
 })
-local glowGradient=ak("UIGradient",{ Color=rainbowSeq, Rotation=45, Parent=glow })
-
--- 2. 创建边框并注入发光同样的颜色
-local borderStroke=ak("UIStroke",{ 
-    Thickness=2, 
-    ApplyStrokeMode=Enum.ApplyStrokeMode.Border, 
-    Color=Color3.new(1,1,1), 
-    Transparency=1 
-})
-local borderGradient=ak("UIGradient",{ Color=rainbowSeq, Rotation=45, Parent=borderStroke })
-local glowRotateSpeed = 5 -- 👈 把全局转速变量定义在这里
 
 
 
@@ -10989,7 +10968,7 @@ aw,
 
 
 }),
-borderStroke,
+UIStroke,
 av,
 ax,
 ay,
@@ -11099,19 +11078,7 @@ PaddingBottom=UDim.new(0,as.UIPadding),
 })
 })
 
-task.spawn(function()
-    local runService = game:GetService("RunService")
-    runService.Heartbeat:Connect(function(dt)
-        if glowGradient and borderGradient then
-            -- 改成使用动态变量 glowRotateSpeed
-            local newRot = (glowGradient.Rotation + dt * glowRotateSpeed * 60) % 360
-            glowGradient.Rotation = newRot
-            borderGradient.Rotation = newRot
-        end
-    end)
-end)
-
-aj.AddSignal(as.UIElements.Main.Main.Topbar.Left:GetPropertyChangedSignal"AbsoluteSize",function()-- 启动同步流动动画，不受开关窗口影响，永不重置
+aj.AddSignal(as.UIElements.Main.Main.Topbar.Left:GetPropertyChangedSignal"AbsoluteSize",function()
 local j=0
 local l=as.UIElements.Main.Main.Topbar.Right.UIListLayout.AbsoluteContentSize.X/ar.WindUI.UIScale
 
@@ -11369,15 +11336,16 @@ end
 as.BackgroundImageTransparency=math.floor(m*10+0.5)/10
 end
 
+function as.SetBackgroundTransparency(l,m)
+local p=math.floor(tonumber(m)*10+0.5)/10
+ar.WindUI.TransparencyValue=p
+as:ToggleTransparency(p>0)
+end
 
-function as.SetGlow(p, r, t, speed, rotation)
-    glow.Visible = r ~= false
-    if t then glow.ImageTransparency = t end
-    if speed then glowRotateSpeed = speed end
-    if rotation then 
-        glowGradient.Rotation = rotation 
-        borderGradient.Rotation = rotation 
-    end
+function as.SetGlow(p,r,c,t)
+    glow.Visible=r~=false
+    if c then glow.ImageColor3=c end
+    if t then glow.ImageTransparency=t end
 end
 
 local l
@@ -11511,9 +11479,9 @@ as.OpenButtonMain:Visible(false)
 end
 
 
-al(az,0.25,{ImageTransparency=as.ShadowTransparency},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-al(glow,0.4,{ImageTransparency=0.45},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-al(borderStroke,0.4,{Transparency=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play() -- 👈 加上这一行让边框显现
+al(az,0.25,{ImageTransparency=as.ShadowTransparency},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()al(glow,0.4,{ImageTransparency=0.45},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+if UIStroke then
+al(UIStroke,0.25,{Transparency=.8},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 
 task.spawn(function()
@@ -11578,9 +11546,9 @@ ImageTransparency=1,
 },Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 end
-al(az,0.25,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-al(glow,0.3,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.InOut):Play()
-al(borderStroke,0.3,{Transparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.InOut):Play() -- 👈 加上这一行让边框消失
+al(az,0.25,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()al(glow,0.3,{ImageTransparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.InOut):Play()
+if UIStroke then
+al(UIStroke,0.25,{Transparency=1},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 
 al(d,.3,{Size=UDim2.new(0,0,0,4),ImageTransparency=1},Enum.EasingStyle.Exponential,Enum.EasingDirection.InOut):Play()
