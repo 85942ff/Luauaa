@@ -11103,8 +11103,8 @@ task.spawn(function()
     local runService = game:GetService("RunService")
     runService.Heartbeat:Connect(function(dt)
         if glowGradient and borderGradient then
-            -- 5 是转速，如果觉得快可以改成 2 或 3
-            local newRot = (glowGradient.Rotation + dt * 5 * 60) % 360
+            -- 改成使用动态变量 glowRotateSpeed
+            local newRot = (glowGradient.Rotation + dt * glowRotateSpeed * 60) % 360
             glowGradient.Rotation = newRot
             borderGradient.Rotation = newRot
         end
@@ -11369,23 +11369,15 @@ end
 as.BackgroundImageTransparency=math.floor(m*10+0.5)/10
 end
 
-function as.SetBackgroundTransparency(l,m)
-local p=math.floor(tonumber(m)*10+0.5)/10
-ar.WindUI.TransparencyValue=p
-as:ToggleTransparency(p>0)
-end
+local glowRotateSpeed = 5 -- 默认转速，你可以全局修改这个值
 
-function as.SetGlow(p,r,t,animate,speed,rotation)
-    glow.Visible=r~=false
-    if t then glow.ImageTransparency=t end
-    if rotation then glowGradient.Rotation=rotation end
-
-    if animate~=nil then
-        glowTween:Cancel()
-        glowTween=aj.Tween(glowGradient,speed or 3,{
-            Offset=Vector2.new(1,0)
-        },Enum.EasingStyle.Linear,Enum.EasingDirection.Out,animate and -1 or 0,false,0)
-        glowTween:Play()
+function as.SetGlow(p, r, t, speed, rotation)
+    glow.Visible = r ~= false
+    if t then glow.ImageTransparency = t end
+    if speed then glowRotateSpeed = speed end
+    if rotation then 
+        glowGradient.Rotation = rotation 
+        borderGradient.Rotation = rotation 
     end
 end
 
